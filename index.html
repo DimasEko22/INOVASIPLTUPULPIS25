@@ -1,0 +1,1356 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Login Page */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            width: 400px;
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-box h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Dashboard */
+        .main-content {
+            display: none;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            animation: slideInDown 0.6s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            color: #333;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .info-card .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        /* WO PM Categories */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            animation: zoomIn 0.6s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-card i {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .category-card h3 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .category-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* WO List */
+        .wo-list {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-section {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-section select {
+            padding: 12px 20px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-section select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .wo-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .wo-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .wo-item h4 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .wo-item p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-completed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Task Form */
+        .task-form {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .task-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            border-color: #667eea;
+        }
+
+        .task-item h4 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .photo-upload {
+            margin: 15px 0;
+        }
+
+        .photo-upload input[type="file"] {
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .photo-preview {
+            width: 150px;
+            height: 150px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 10px;
+            transition: border-color 0.3s ease;
+        }
+
+        .photo-preview:hover {
+            border-color: #667eea;
+        }
+
+        .task-checkbox {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .task-checkbox input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+
+        .task-checkbox label {
+            cursor: pointer;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Verification Section */
+        .verification-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .verification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .verification-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .verify-btn {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .verify-btn.approved {
+            background: #28a745;
+            cursor: default;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #28a745;
+        }
+
+        .notification.info {
+            background: #17a2b8;
+        }
+
+        .notification.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .nav-menu {
+                flex-direction: column;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-section select {
+                width: 100%;
+            }
+
+            .verification-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+<div id="loginPage" class="login-container">
+    <div class="login-box">
+        <h2><i class="fas fa-cogs"></i> PM Management System</h2>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Username" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </form>
+    </div>
+</div>
+
+
+    <!-- Main Content -->
+    <div id="mainContent" class="main-content">
+        <div class="container">
+            <!-- Header -->
+            <div class="header">
+                <h1><i class="fas fa-tachometer-alt"></i> Dashboard PM Management</h1>
+                <p>Sistem Manajemen Preventive Maintenance - Selamat datang, <span id="userWelcome"></span></p>
+            </div>
+
+            <!-- Navigation Menu -->
+            <div class="nav-menu">
+                <button class="nav-btn active" onclick="showSection('dashboard')">
+                    <i class="fas fa-home"></i> Dashboard
+                </button>
+                <button class="nav-btn" onclick="showSection('wo-pm')">
+                    <i class="fas fa-clipboard-list"></i> WO PM
+                </button>
+                <button class="nav-btn" onclick="showSection('verification-op')">
+                    <i class="fas fa-user-check"></i> Verifikasi Operator
+                </button>
+                <button class="nav-btn" onclick="showSection('verification-tl')">
+                    <i class="fas fa-user-tie"></i> Verifikasi TL Operator
+                </button>
+                <button class="nav-btn" onclick="logout()" style="margin-left: auto;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section">
+                <div class="dashboard-grid">
+                    <div class="info-card">
+                        <h3><i class="fas fa-calendar-check"></i> WO PM Hari Ini</h3>
+                        <div class="number">8</div>
+                        <p>Work Order yang harus diselesaikan hari ini</p>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fas fa-clock"></i> Menunggu Verifikasi</h3>
+                        <div class="number">3</div>
+                        <p>WO yang menunggu persetujuan operator</p>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fas fa-check-circle"></i> Selesai</h3>
+                        <div class="number">12</div>
+                        <p>WO yang telah diselesaikan minggu ini</p>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Overdue</h3>
+                        <div class="number">2</div>
+                        <p>WO yang melewati jadwal</p>
+                    </div>
+                </div>
+
+                <!-- Quick Access -->
+                <div class="verification-card">
+                    <h3><i class="fas fa-bolt"></i> Akses Cepat</h3>
+                    <div class="verification-item">
+                        <div>
+                            <strong>WO-PM-001</strong><br>
+                            <small>PM Mesin Bubut - BC 1</small>
+                        </div>
+                        <button class="verify-btn" onclick="openWODetail('WO-PM-001')">
+                            <i class="fas fa-eye"></i> Lihat Detail
+                        </button>
+                    </div>
+                    <div class="verification-item">
+                        <div>
+                            <strong>WO-PM-007</strong><br>
+                            <small>PM Konveyor - Harlis</small>
+                        </div>
+                        <button class="verify-btn" onclick="openWODetail('WO-PM-007')">
+                            <i class="fas fa-eye"></i> Lihat Detail
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Schedule Preview -->
+                <div class="verification-card">
+                    <h3><i class="fas fa-calendar-alt"></i> Jadwal PM Minggu Ini</h3>
+                    <div style="display: grid; gap: 10px;">
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: #e3f2fd; border-radius: 8px;">
+                            <span><strong>Senin</strong> - PM BC 1, BC 7, BC 14</span>
+                            <span class="status-badge status-completed">3/3 Selesai</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: #fff3e0; border-radius: 8px;">
+                            <span><strong>Selasa</strong> - PM Harlis Unit 2, Konin</span>
+                            <span class="status-badge status-pending">1/2 Selesai</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: #e8f5e8; border-radius: 8px;">
+                            <span><strong>Rabu</strong> - PM BC 30, Mesin 2</span>
+                            <span class="status-badge status-approved">Dijadwalkan</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WO PM Section -->
+            <div id="wo-pm" class="section hidden">
+                <h2><i class="fas fa-clipboard-list"></i> Work Order PM</h2>
+                <p>Pilih kategori mesin untuk melihat daftar WO PM</p>
+                
+                <div class="category-grid">
+                    <div class="category-card" onclick="showWOList('mesin1')">
+                        <i class="fas fa-cog"></i>
+                        <h3>Mesin 1</h3>
+                        <p>PM untuk mesin produksi utama</p>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-pending">5 Active</span>
+                        </div>
+                    </div>
+                    <div class="category-card" onclick="showWOList('mesin2')">
+                        <i class="fas fa-industry"></i>
+                        <h3>Mesin 2</h3>
+                        <p>PM untuk mesin produksi sekunder</p>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-approved">3 Active</span>
+                        </div>
+                    </div>
+                    <div class="category-card" onclick="showWOList('harlis')">
+                        <i class="fas fa-conveyor-belt"></i>
+                        <h3>Harlis</h3>
+                        <p>PM untuk sistem handling</p>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-completed">2 Active</span>
+                        </div>
+                    </div>
+                    <div class="category-card" onclick="showWOList('konin')">
+                        <i class="fas fa-shipping-fast"></i>
+                        <h3>Konin</h3>
+                        <p>PM untuk sistem konveyor</p>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-pending">4 Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WO List Detail -->
+            <div id="wo-list-detail" class="section hidden">
+                <button class="back-btn" onclick="showSection('wo-pm')">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </button>
+                
+                <div class="wo-list">
+                    <h3 id="categoryTitle">Daftar WO PM - Mesin 1</h3>
+                    
+                    <div class="filter-section">
+                        <label>Filter PM Type:</label>
+                        <select id="pmFilter" onchange="filterWO()">
+                            <option value="all">Semua PM</option>
+                            <option value="pm1">PM 1 Hari</option>
+                            <option value="pm7">PM 7 Hari</option>
+                            <option value="pm14">PM 14 Hari</option>
+                            <option value="pm30">PM 30 Hari</option>
+                        </select>
+                        
+                        <label>Status:</label>
+                        <select id="statusFilter" onchange="filterWO()">
+                            <option value="all">Semua Status</option>
+                            <option value="pending">Menunggu Verifikasi</option>
+                            <option value="approved">Disetujui</option>
+                            <option value="completed">Selesai</option>
+                        </select>
+                    </div>
+
+                    <div id="woListContainer">
+                        <!-- WO items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task Form -->
+            <div id="task-form-section" class="section hidden">
+                <button class="back-btn" onclick="goBackToWOList()">
+                    <i class="fas fa-arrow-left"></i> Kembali ke Daftar WO
+                </button>
+                
+                <div class="task-form">
+                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 20px;">
+                        <div>
+                            <h3 id="woTitle">WO PM Detail</h3>
+                            <p id="woDescription">Deskripsi WO akan muncul di sini</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <span id="woStatus" class="status-badge status-pending">Menunggu Verifikasi</span>
+                        </div>
+                    </div>
+
+                    <div id="verificationSection" class="verification-card">
+                        <h4><i class="fas fa-user-check"></i> Verifikasi Operator</h4>
+                        <p>Mohon verifikasi dari supervisor operator sebelum memulai pekerjaan PM</p>
+                        <button id="requestVerificationBtn" class="verify-btn" onclick="requestVerification()">
+                            <i class="fas fa-paper-plane"></i> Minta Verifikasi Operator
+                        </button>
+                        <div id="verificationStatus" class="hidden" style="margin-top: 15px; padding: 15px; background: #d4edda; border-radius: 8px; color: #155724;">
+                            <i class="fas fa-check-circle"></i> Verifikasi telah disetujui oleh SPV Operator
+                        </div>
+                    </div>
+
+                    <div id="tasksContainer">
+                        <!-- Tasks will be populated by JavaScript -->
+                    </div>
+
+                    <div id="finalVerificationSection" class="verification-card hidden">
+                        <h4><i class="fas fa-clipboard-check"></i> Verifikasi Penyelesaian</h4>
+                        <p>Mohon verifikasi dari operator bahwa semua pekerjaan PM telah selesai</p>
+                        <button class="submit-btn" onclick="requestFinalVerification()">
+                            <i class="fas fa-check"></i> Minta Verifikasi Penyelesaian
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verification Operator Section -->
+            <div id="verification-op" class="section hidden">
+                <h2><i class="fas fa-user-check"></i> Verifikasi Operator</h2>
+                <p>Daftar WO PM yang memerlukan persetujuan operator</p>
+                
+                <div class="verification-card">
+                    <h3>Permintaan Verifikasi Baru</h3>
+                    <div class="verification-item">
+                        <div>
+                            <strong>WO-PM-001</strong><br>
+                            <small>PM Mesin Bubut - BC 1</small><br>
+                            <small>Diminta oleh: Teknisi A - 2 jam yang lalu</small>
+                        </div>
+                        <button class="verify-btn" onclick="approveVerification('WO-PM-001', 'op')">
+                            <i class="fas fa-check"></i> Setujui
+                        </button>
+                    </div>
+                    <div class="verification-item">
+                        <div>
+                            <strong>WO-PM-003</strong><br>
+                            <small>PM Konveyor - Harlis Unit 2</small><br>
+                            <small>Diminta oleh: Teknisi B - 1 jam yang lalu</small>
+                        </div>
+                        <button class="verify-btn" onclick="approveVerification('WO-PM-003', 'op')">
+                            <i class="fas fa-check"></i> Setujui
+                        </button>
+                    </div>
+                </div>
+
+                <div class="verification-card">
+                    <h3>Verifikasi Penyelesaian</h3>
+                    <div class="verification-item">
+                        <div>
+                            <strong>WO-PM-007</strong><br>
+                            <small>PM Mesin Press - BC 14</small><br>
+                            <small>Permintaan verifikasi selesai - 30 menit yang lalu</small>
+                        </div>
+                        <button class="verify-btn" onclick="approveCompletion('WO-PM-007')">
+                            <i class="fas fa-clipboard-check"></i> Verifikasi Selesai
+                        </button>
+                    </div>
+                </div>
+
+                <div class="verification-card">
+                    <h3>Sudah Diverifikasi</h3>
+                    <div class="verification-item">
+                        <div>
+                            <strong>WO-PM-002</strong><br>
+                            <small>PM Generator - Mesin 2</small><br>
+                            <small>Disetujui 3 jam yang lalu</small>
+                        </div>
+                        <button class="verify-btn approved" disabled>
+                            <i class="fas fa-check-circle"></i> Telah Disetujui
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verification TL Section -->
+            <div id="verification-tl" class="section hidden">
+                <h2><i class="fas fa-user-tie"></i> Verifikasi TL Operator</h2>
+                <p>Daftar WO PM yang memerlukan persetujuan Team Leader</p>
+                
+                <div class="verification-card">
+                    <h3>Escalated Requests</h3>
+                    <div class="verification-item">
+                        <div>
+                            <strong>WO-PM-005</strong><br>
+                            <small>PM Urgent - Mesin Critical</small><br>
+                            <small>Escalated dari Supervisor - High Priority</small>
+                        </div>
+                        <button class="verify-btn" onclick="approveVerification('WO-PM-005', 'tl')">
+                            <i class="fas fa-check"></i> Setujui
+                        </button>
+                    </div>
+                </div>
+
+                <div class="verification-card">
+                    <h3>Review & Approval</h3>
+                    <div class="verification-item">
+                        <div>
+                            <strong>WO-PM-006</strong><br>
+                            <small>PM Monthly Check - All Machines</small><br>
+                            <small>Review bulanan sistem PM</small>
+                        </div>
+                        <button class="verify-btn" onclick="approveVerification('WO-PM-006', 'tl')">
+                            <i class="fas fa-eye"></i> Review & Approve
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Memuat data...</p>
+    </div>
+
+    <script>
+        // Sample data
+        const woData = {
+            mesin1: [
+                { id: 'WO-PM-001', title: 'PM Mesin Bubut - BC 1', description: 'Preventive maintenance harian mesin bubut BC 1', type: 'pm1', status: 'pending', scheduled: '2024-01-15' },
+                { id: 'WO-PM-002', title: 'PM Generator - BC 7', description: 'Preventive maintenance mingguan generator BC 7', type: 'pm7', status: 'approved', scheduled: '2024-01-15' },
+                { id: 'WO-PM-003', title: 'PM Kompresor - BC 14', description: 'Preventive maintenance 2 mingguan kompresor BC 14', type: 'pm14', status: 'completed', scheduled: '2024-01-14' }
+            ],
+            mesin2: [
+                { id: 'WO-PM-004', title: 'PM Press Machine - Unit 2', description: 'Preventive maintenance press machine unit 2', type: 'pm7', status: 'pending', scheduled: '2024-01-16' },
+                { id: 'WO-PM-005', title: 'PM Cutting Machine - Unit 3', description: 'Preventive maintenance cutting machine unit 3', type: 'pm1', status: 'approved', scheduled: '2024-01-15' }
+            ],
+            harlis: [
+                { id: 'WO-PM-006', title: 'PM Konveyor - Harlis 1', description: 'Preventive maintenance konveyor harlis unit 1', type: 'pm7', status: 'pending', scheduled: '2024-01-16' },
+                { id: 'WO-PM-007', title: 'PM Elevator - Harlis 2', description: 'Preventive maintenance elevator harlis unit 2', type: 'pm14', status: 'completed', scheduled: '2024-01-14' }
+            ],
+            konin: [
+                { id: 'WO-PM-008', title: 'PM Konveyor Utama - Line A', description: 'Preventive maintenance konveyor utama line A', type: 'pm1', status: 'pending', scheduled: '2024-01-15' },
+                { id: 'WO-PM-009', title: 'PM Konveyor Sorting - Line B', description: 'Preventive maintenance konveyor sorting line B', type: 'pm7', status: 'approved', scheduled: '2024-01-16' }
+            ]
+        };
+
+        const taskTemplates = {
+            pm1: [
+                { id: 1, title: 'Cek level oli mesin', description: 'Periksa level oli dan kondisi oli mesin', required: true },
+                { id: 2, title: 'Cleaning filter udara', description: 'Bersihkan filter udara dari kotoran dan debu', required: true },
+                { id: 3, title: 'Cek suhu operasional', description: 'Monitor suhu operasional mesin dalam range normal', required: true },
+                { id: 4, title: 'Inspeksi visual komponen', description: 'Periksa secara visual kondisi komponen utama', required: false }
+            ],
+            pm7: [
+                { id: 1, title: 'Ganti oli mesin', description: 'Penggantian oli mesin sesuai spesifikasi', required: true },
+                { id: 2, title: 'Cek tegangan belt', description: 'Periksa dan adjust tegangan belt transmisi', required: true },
+                { id: 3, title: 'Pelumasan bearing', description: 'Lakukan pelumasan pada semua bearing', required: true },
+                { id: 4, title: 'Kalibrasi sensor', description: 'Kalibrasi sensor temperature dan pressure', required: true },
+                { id: 5, title: 'Cek sistem kelistrikan', description: 'Inspeksi panel listrik dan koneksi', required: false }
+            ],
+            pm14: [
+                { id: 1, title: 'Overhaul komponen utama', description: 'Pembongkaran dan pemeriksaan komponen utama', required: true },
+                { id: 2, title: 'Ganti filter oli', description: 'Penggantian filter oli hydraulic', required: true },
+                { id: 3, title: 'Alignment mesin', description: 'Pemeriksaan dan penyesuaian alignment', required: true },
+                { id: 4, title: 'Test performance', description: 'Testing performance mesin setelah maintenance', required: true },
+                { id: 5, title: 'Update logbook', description: 'Update logbook maintenance dan dokumentasi', required: true }
+            ],
+            pm30: [
+                { id: 1, title: 'Major overhaul', description: 'Major overhaul seluruh komponen mesin', required: true },
+                { id: 2, title: 'Ganti spare part utama', description: 'Penggantian spare part sesuai jadwal', required: true },
+                { id: 3, title: 'Kalibrasi semua instrument', description: 'Kalibrasi lengkap semua instrument', required: true },
+                { id: 4, title: 'Performance test comprehensive', description: 'Test performance menyeluruh', required: true },
+                { id: 5, title: 'Documentation update', description: 'Update semua dokumentasi maintenance', required: true }
+            ]
+        };
+
+        let currentUser = '';
+        let currentCategory = '';
+        let currentWO = null;
+        let completedTasks = new Set();
+
+        // Login functionality dengan kredensial spesifik
+const validUsers = {
+    'admin': 'admin123',
+    'teknisi': 'teknisi123', 
+    'operator': 'operator123',
+    'supervisor': 'spv123'
+};
+
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    // Validasi kredensial
+    if (validUsers[username] && validUsers[username] === password) {
+        currentUser = username;
+        document.getElementById('userWelcome').textContent = username;
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        showNotification('Login berhasil! Selamat datang ' + username, 'success');
+    } else {
+        showNotification('Username atau password salah!', 'warning');
+    }
+});
+
+
+        // Navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.add('hidden'));
+            
+            // Remove active class from all nav buttons
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.remove('hidden');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        function showWOList(category) {
+            currentCategory = category;
+            const categoryNames = {
+                mesin1: 'Mesin 1',
+                mesin2: 'Mesin 2', 
+                harlis: 'Harlis',
+                konin: 'Konin'
+            };
+            
+            document.getElementById('categoryTitle').textContent = `Daftar WO PM - ${categoryNames[category]}`;
+            document.getElementById('wo-pm').classList.add('hidden');
+            document.getElementById('wo-list-detail').classList.remove('hidden');
+            
+            populateWOList();
+        }
+
+        function populateWOList() {
+            const container = document.getElementById('woListContainer');
+            const wos = woData[currentCategory] || [];
+            
+            container.innerHTML = '';
+            
+            wos.forEach(wo => {
+                const woItem = document.createElement('div');
+                woItem.className = 'wo-item';
+                woItem.onclick = () => openWODetail(wo.id);
+                
+                let statusClass = 'status-pending';
+                if (wo.status === 'approved') statusClass = 'status-approved';
+                else if (wo.status === 'completed') statusClass = 'status-completed';
+                
+                woItem.innerHTML = `
+                    <h4>${wo.title}</h4>
+                    <p>${wo.description}</p>
+                    <p><strong>Tipe:</strong> ${wo.type.toUpperCase()} | <strong>Jadwal:</strong> ${wo.scheduled}</p>
+                    <span class="status-badge ${statusClass}">
+                        ${wo.status === 'pending' ? 'Menunggu Verifikasi' : 
+                          wo.status === 'approved' ? 'Disetujui' : 'Selesai'}
+                    </span>
+                `;
+                
+                container.appendChild(woItem);
+            });
+        }
+
+        function filterWO() {
+            const pmFilter = document.getElementById('pmFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const container = document.getElementById('woListContainer');
+            const wos = woData[currentCategory] || [];
+            
+            const filteredWOs = wos.filter(wo => {
+                const pmMatch = pmFilter === 'all' || wo.type === pmFilter;
+                const statusMatch = statusFilter === 'all' || wo.status === statusFilter;
+                return pmMatch && statusMatch;
+            });
+            
+            container.innerHTML = '';
+            
+            filteredWOs.forEach(wo => {
+                const woItem = document.createElement('div');
+                woItem.className = 'wo-item';
+                woItem.onclick = () => openWODetail(wo.id);
+                
+                let statusClass = 'status-pending';
+                if (wo.status === 'approved') statusClass = 'status-approved';
+                else if (wo.status === 'completed') statusClass = 'status-completed';
+                
+                woItem.innerHTML = `
+                    <h4>${wo.title}</h4>
+                    <p>${wo.description}</p>
+                    <p><strong>Tipe:</strong> ${wo.type.toUpperCase()} | <strong>Jadwal:</strong> ${wo.scheduled}</p>
+                    <span class="status-badge ${statusClass}">
+                        ${wo.status === 'pending' ? 'Menunggu Verifikasi' : 
+                          wo.status === 'approved' ? 'Disetujui' : 'Selesai'}
+                    </span>
+                `;
+                
+                container.appendChild(woItem);
+            });
+        }
+
+        function openWODetail(woId) {
+            // Find the WO across all categories
+            let foundWO = null;
+            for (const category in woData) {
+                foundWO = woData[category].find(wo => wo.id === woId);
+                if (foundWO) break;
+            }
+            
+            if (!foundWO) return;
+            
+            currentWO = foundWO;
+            
+            // Hide current section and show task form
+            document.querySelector('.section:not(.hidden)').classList.add('hidden');
+            document.getElementById('task-form-section').classList.remove('hidden');
+            
+            // Populate WO details
+            document.getElementById('woTitle').textContent = foundWO.title;
+            document.getElementById('woDescription').textContent = foundWO.description;
+            
+            const statusElement = document.getElementById('woStatus');
+            statusElement.className = `status-badge status-${foundWO.status}`;
+            statusElement.textContent = foundWO.status === 'pending' ? 'Menunggu Verifikasi' : 
+                                       foundWO.status === 'approved' ? 'Disetujui' : 'Selesai';
+            
+            // Show/hide verification section based on status
+            const verificationSection = document.getElementById('verificationSection');
+            const verificationStatus = document.getElementById('verificationStatus');
+            
+            if (foundWO.status === 'pending') {
+                verificationSection.classList.remove('hidden');
+                verificationStatus.classList.add('hidden');
+            } else {
+                verificationSection.classList.remove('hidden');
+                verificationStatus.classList.remove('hidden');
+                document.getElementById('requestVerificationBtn').style.display = 'none';
+            }
+            
+            // Populate tasks
+            populateTasks(foundWO.type);
+        }
+
+        function populateTasks(pmType) {
+            const container = document.getElementById('tasksContainer');
+            const tasks = taskTemplates[pmType] || [];
+            
+            container.innerHTML = '';
+            
+            tasks.forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item';
+                
+                taskItem.innerHTML = `
+                    <h4>${task.title} ${task.required ? '<span style="color: red;">*</span>' : ''}</h4>
+                    <p>${task.description}</p>
+                    
+                    <div class="photo-upload">
+                        <label for="photo-${task.id}">Upload Foto Evidence:</label>
+                        <input type="file" id="photo-${task.id}" accept="image/*" onchange="previewPhoto(${task.id})" ${currentWO && currentWO.status === 'pending' ? 'disabled' : ''}>
+                        <div class="photo-preview" id="preview-${task.id}">
+                            <i class="fas fa-camera"></i><br>
+                            Foto Evidence<br>
+                            ${task.required ? '(Wajib)' : '(Opsional)'}
+                        </div>
+                    </div>
+                    
+                    <div class="task-checkbox">
+                        <input type="checkbox" id="task-${task.id}" onchange="updateTaskStatus()" ${currentWO && currentWO.status === 'pending' ? 'disabled' : ''}>
+                        <label for="task-${task.id}">Task selesai dikerjakan</label>
+                    </div>
+                `;
+                
+                container.appendChild(taskItem);
+            });
+            
+            // Add submit button
+            const submitSection = document.createElement('div');
+            submitSection.innerHTML = `
+                <button id="submitTasksBtn" class="submit-btn" onclick="submitTasks()" disabled>
+                    <i class="fas fa-save"></i> Simpan Progress
+                </button>
+            `;
+            container.appendChild(submitSection);
+            
+            updateTaskStatus();
+        }
+
+        function previewPhoto(taskId) {
+            const input = document.getElementById(`photo-${taskId}`);
+            const preview = document.getElementById(`preview-${taskId}`);
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+            
+            updateTaskStatus();
+        }
+
+        function updateTaskStatus() {
+            if (!currentWO) return;
+            
+            const tasks = taskTemplates[currentWO.type] || [];
+            const submitBtn = document.getElementById('submitTasksBtn');
+            let allRequiredCompleted = true;
+            let allTasksCompleted = true;
+            
+            tasks.forEach(task => {
+                const checkbox = document.getElementById(`task-${task.id}`);
+                const photoInput = document.getElementById(`photo-${task.id}`);
+                
+                if (task.required) {
+                    if (!checkbox.checked || !photoInput.files[0]) {
+                        allRequiredCompleted = false;
+                    }
+                }
+                
+                if (!checkbox.checked) {
+                    allTasksCompleted = false;
+                }
+            });
+            
+            // Enable submit if verification approved and at least required tasks completed
+            if (currentWO.status !== 'pending') {
+                submitBtn.disabled = !allRequiredCompleted;
+                
+                if (allTasksCompleted) {
+                    document.getElementById('finalVerificationSection').classList.remove('hidden');
+                }
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        function requestVerification() {
+            showNotification('Permintaan verifikasi telah dikirim ke supervisor operator', 'info');
+            document.getElementById('requestVerificationBtn').textContent = 'Menunggu Verifikasi...';
+            document.getElementById('requestVerificationBtn').disabled = true;
+        }
+
+        function submitTasks() {
+            if (!currentWO) return;
+            
+            showLoading();
+            
+            setTimeout(() => {
+                hideLoading();
+                showNotification('Progress task berhasil disimpan!', 'success');
+                
+                // Update WO status in data
+                for (const category in woData) {
+                    const woIndex = woData[category].findIndex(wo => wo.id === currentWO.id);
+                    if (woIndex !== -1) {
+                        woData[category][woIndex].status = 'completed';
+                        break;
+                    }
+                }
+            }, 1500);
+        }
+
+        function requestFinalVerification() {
+            showNotification('Permintaan verifikasi penyelesaian telah dikirim ke operator', 'info');
+            document.getElementById('finalVerificationSection').innerHTML = `
+                <h4><i class="fas fa-clock"></i> Menunggu Verifikasi Penyelesaian</h4>
+                <p>Permintaan verifikasi telah dikirim. Menunggu konfirmasi dari operator.</p>
+            `;
+        }
+
+        function approveVerification(woId, type) {
+            const typeText = type === 'op' ? 'Operator' : 'Team Leader';
+            showNotification(`Verifikasi ${typeText} untuk ${woId} berhasil disetujui`, 'success');
+            
+            // Update button to show approved
+            event.target.innerHTML = '<i class="fas fa-check-circle"></i> Telah Disetujui';
+            event.target.className = 'verify-btn approved';
+            event.target.disabled = true;
+            
+            // Update WO status in data if it's the main verification
+            if (type === 'op') {
+                for (const category in woData) {
+                    const woIndex = woData[category].findIndex(wo => wo.id === woId);
+                    if (woIndex !== -1) {
+                        woData[category][woIndex].status = 'approved';
+                        break;
+                    }
+                }
+            }
+        }
+
+        function approveCompletion(woId) {
+            showNotification(`Penyelesaian WO ${woId} berhasil diverifikasi`, 'success');
+            
+            event.target.innerHTML = '<i class="fas fa-check-circle"></i> Telah Diverifikasi';
+            event.target.className = 'verify-btn approved';
+            event.target.disabled = true;
+        }
+
+        function goBackToWOList() {
+            document.getElementById('task-form-section').classList.add('hidden');
+            document.getElementById('wo-list-detail').classList.remove('hidden');
+        }
+
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                document.getElementById('mainContent').style.display = 'none';
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                currentUser = '';
+                showNotification('Logout berhasil', 'info');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            showNotification('Aplikasi PM Management System siap digunakan', 'info');
+        });
+    </script>
+</body>
+</html>
